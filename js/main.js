@@ -6,17 +6,17 @@ PluginManager.setup($plugins);
 
 //================= 加载进度条 Hook =================
 (function() {
-    const progressFill = document.getElementById("progress-fill");
     const loadingScreen = document.getElementById("loading-screen");
+    const progressFill = document.getElementById("progress-fill");
 
-    // 新增：百分比文本
+    // 百分比文本
     const percentText = document.createElement("div");
     percentText.style.marginTop = "8px";
     percentText.style.fontSize = "14px";
     percentText.innerText = "0%";
     loadingScreen.appendChild(percentText);
 
-    // 新增：剩余文件数文本
+    // 剩余文件数文本
     const remainText = document.createElement("div");
     remainText.style.marginTop = "4px";
     remainText.style.fontSize = "12px";
@@ -24,8 +24,8 @@ PluginManager.setup($plugins);
     remainText.innerText = "剩余文件数: 0";
     loadingScreen.appendChild(remainText);
 
-    let total = 0;    // 总资源数
-    let loaded = 0;   // 已加载资源数
+    let total = 0;
+    let loaded = 0;
     let finished = false;
 
     function updateProgress() {
@@ -37,9 +37,12 @@ PluginManager.setup($plugins);
 
         if (percent >= 100 && !finished) {
             finished = true;
+            // 平滑淡出加载界面
+            loadingScreen.style.transition = "opacity 0.5s";
+            loadingScreen.style.opacity = "0";
             setTimeout(() => {
                 loadingScreen.style.display = "none";
-            }, 300);
+            }, 500);
         }
     }
 
@@ -48,10 +51,10 @@ PluginManager.setup($plugins);
     Bitmap.prototype.initialize = function(src) {
         if (src) {
             total++;
-            const image = new Image();
-            image.onload = () => { loaded++; updateProgress(); };
-            image.onerror = () => { loaded++; updateProgress(); };
-            image.src = src;
+            const img = new Image();
+            img.onload = () => { loaded++; updateProgress(); };
+            img.onerror = () => { loaded++; updateProgress(); };
+            img.src = src;
         }
         _Bitmap_initialize.apply(this, arguments);
     };
@@ -89,7 +92,5 @@ window.onload = function() {
     SceneManager.run(Scene_Boot);
 };
 
-// 禁用默认的 Now Loading
-Graphics.printLoading = function() {
-    // 什么也不做，避免覆盖自定义的加载界面
-};
+// 禁用默认 Now Loading，避免覆盖自定义进度条
+Graphics.printLoading = function() {};
