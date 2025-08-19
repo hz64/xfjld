@@ -88,3 +88,8 @@ PluginManager.setup($plugins);
 window.onload = function() {
     SceneManager.run(Scene_Boot);
 };
+
+// 禁用默认的 Now Loading
+Graphics.printLoading = function() {
+    // 什么也不做，避免覆盖自定义的加载界面
+};
