@@ -16,6 +16,14 @@ PluginManager.setup($plugins);
     percentText.innerText = "0%";
     loadingScreen.appendChild(percentText);
 
+    // 新增：剩余文件数文本
+    const remainText = document.createElement("div");
+    remainText.style.marginTop = "4px";
+    remainText.style.fontSize = "12px";
+    remainText.style.opacity = "0.8";
+    remainText.innerText = "剩余文件数: 0";
+    loadingScreen.appendChild(remainText);
+
     let total = 0;    // 总资源数
     let loaded = 0;   // 已加载资源数
     let finished = false;
@@ -25,6 +33,8 @@ PluginManager.setup($plugins);
         const percent = Math.floor((loaded / total) * 100);
         progressFill.style.width = percent + "%";
         percentText.innerText = percent + "%";
+        remainText.innerText = "剩余文件数: " + (total - loaded);
+
         if (percent >= 100 && !finished) {
             finished = true;
             setTimeout(() => {
